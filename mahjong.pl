@@ -1,3 +1,5 @@
+:- use_module(fichas).
+
 palo(s1, sou). palo(s2, sou). palo(s3, sou). palo(s4, sou). palo(s5, sou). palo(s5R, sou). palo(s6, sou). palo(s7, sou). palo(s8, sou). palo(s9, sou). 
 palo(m1, man). palo(m2, man). palo(m3, man). palo(m4, man). palo(m5, man). palo(m5R, man). palo(m6, man). palo(m7, man). palo(m8, man). palo(m9, man).
 palo(p1, pin). palo(p2, pin). palo(p3, pin). palo(p4, pin). palo(p5, pin). palo(p5R, pin). palo(p6, pin). palo(p7, pin). palo(p8, pin). palo(p9, pin).
@@ -36,11 +38,11 @@ F1 === F2 :- normal(F1), palo(F1, P), numero(F1, N), palo(F2, P), numero(F2, N).
 par(F1, F2) :- F1 === F2.
 tripla(F1, F2, F3) :- F1 === F2, F2 === F3.
 
-escalera(F1, F2, F3) :- mismoPalo(F1, F2, F3), numerosEnEscalera(F1, F2, F3).
+% escalera(F1, F2, F3) :- mismoPalo(F1, F2, F3), numerosEnEscalera(F1, F2, F3).
 
 mismoPalo(F1, F2, F3) :- palo(F1, P), palo(F2, P), palo(F3, P).
 
-numerosEnEscalera(F1, F2, F3) :- sinNumerosRepetidos(F1, F2, F3), rangoNumerico(F1, F2, F3, 2).
+% numerosEnEscalera(F1, F2, F3) :- sinNumerosRepetidos(F1, F2, F3), rangoNumerico(F1, F2, F3, 2).
 
 sinNumerosRepetidos(F1, F2, F3) :- numero(F1, N1), numero(F1, N2), numero(F1, N3), N1 \= N2, N2 \= N3, N1 \= N3.
 
