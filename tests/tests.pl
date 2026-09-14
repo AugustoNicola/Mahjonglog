@@ -98,3 +98,78 @@ test(escalera_falla_con_hueco) :- \+ escalera(m1, m2, m4).
 test(escalera_falla_con_distinto_palo) :- \+ escalera(m1, p2, s3).
 
 :- end_tests(escaleras).
+
+% ===================== combinaciones =====================
+
+:- begin_tests(combinaciones).
+
+test(combinacion_todas, all(Elegidos-Resto == [
+        [1,2]-[3], [1,3]-[2], [2,3]-[1]
+    ])) :-
+    combinacion(2, [1,2,3], Elegidos, Resto).
+
+test(combinacion_cero) :- once(combinacion(0, [1,2,3], [], [1,2,3])).
+test(combinacion_completa) :- once(combinacion(3, [1,2,3], [1,2,3], [])).
+test(combinacion_conserva_repetidos, all(Elegidos == [[m1,m1], [m1,m2], [m1,m2]])) :-
+    combinacion(2, [m1, m1, m2], Elegidos, _).
+
+:- end_tests(combinaciones).
+
+% ===================== orden estándar =====================
+
+:- begin_tests(orden).
+
+test(orden_por_palo) :- ordenarMano([s1, m1, p1], [m1, p1, s1]).
+test(orden_por_numero) :- ordenarMano([m3, m1, m2], [m1, m2, m3]).
+test(orden_honores) :- ordenarMano([r, e, n, w, s, g, wh], [e, s, w, n, wh, g, r]).
+test(orden_redfive_despues_de_normal) :- ordenarMano([s5, s5R, s5], [s5, s5, s5R]).
+test(orden_conserva_repetidos) :- ordenarMano([m2, m1, m2, m1], [m1, m1, m2, m2]).
+test(orden_mano_mixta) :-
+    ordenarMano([s5, p1, s5R, s5, s1, n], [p1, s1, s5, s5, s5R, n]).
+
+:- end_tests(orden).
+
+% ===================== forma de mano ganadora =====================
+
+:- begin_tests(forma_mano_ganadora).
+
+test(seleccionar_par_encuentra_par, all(Resto == [[m3, m4, m5]])) :-
+    seleccionarPar([m1, m1, m3, m4, m5], Resto).
+
+test(seleccionar_par_falla_sin_par) :- \+ seleccionarPar([m1, m2, m3], _).
+
+test(seleccionar_par_con_tripla_da_dos_pares_adyacentes) :-
+    % En [m1,m1,m1,m2] hay dos pares de m1 adyacentes: (pos.1,2) y (pos.2,3).
+    findall(R, seleccionarPar([m1, m1, m1, m2], R), Rs),
+    length(Rs, 2).
+
+test(seleccionar_juego_tripla) :- once(seleccionarJuego([m1, m1, m1], [])).
+test(seleccionar_juego_escalera) :- once(seleccionarJuego([m1, m2, m3], [])).
+test(seleccionar_juego_falla_sin_juego) :- \+ seleccionarJuego([m1, m2, p3], _).
+
+test(seleccionar_juego_unico) :-
+    findall(R, seleccionarJuego([m1, m1, m1], R), Rs),
+    length(Rs, 1).
+
+test(compuesta_por_cero_juegos_vacia) :- once(compuestaPorJuegos([], 0)).
+test(compuesta_por_un_juego) :- once(compuestaPorJuegos([m1, m1, m1], 1)).
+test(compuesta_por_dos_juegos) :- once(compuestaPorJuegos([m1, m1, m1, p2, p3, p4], 2)).
+test(compuesta_por_juegos_falla_con_sobrantes) :- \+ compuestaPorJuegos([m1, m1, m1, m9], 1).
+
+test(mano_ganadora_triplas) :-
+    once(manoGanadora([m1, m1, m1, p2, p3, p4, s5, s5, s5, s6, s7, s8, n, n])).
+
+test(mano_ganadora_desordenada) :-
+    once(manoGanadora([n, n, s8, s7, s6, s5, s5, s5, p4, p3, p2, m1, m1, m1])).
+
+test(mano_ganadora_falla_mano_incompleta) :-
+    \+ manoGanadora([m1, m1, m1, p2, p3, p4, s5, s5, s5, s6, s7, s8, n]).
+
+test(mano_ganadora_falla_sin_par) :-
+    \+ manoGanadora([m1, m2, m3, p2, p3, p4, s5, s6, s7, s6, s7, s8, m4, m5]).
+
+test(mano_ganadora_es_unica) :-
+    findall(x, manoGanadora([m1, m1, m1, p2, p3, p4, s5, s5, s5, s6, s7, s8, n, n]), Rs),
+    length(Rs, 1).
+
+:- end_tests(forma_mano_ganadora).
