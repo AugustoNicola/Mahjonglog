@@ -29,5 +29,5 @@ ficha(F) :- palo(F, _).
 :- op(700, xfx, ===).
 %! ===(F1, F2) is nondet.
 %* Relaciona fichas iguales (en el sentido de compratir palo y número, i.e. servir para un par). No distingue red fives.
-F === F :- palo(F, honor).
+F1 === F2 :- palo(F1, honor), !, F1 == F2.
 F1 === F2 :- normal(F1), palo(F1, P), numero(F1, N), palo(F2, P), numero(F2, N).

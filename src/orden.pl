@@ -35,12 +35,16 @@ compararFichas(Orden, F1-I1, F2-I2) :-
     claveFicha(F2, C2),
     compare(Orden, C1-I1, C2-I2).
 
-%! ordenarMano(+Mano, -ManoOrdenada) is det.
-%* Ordena una mano de fichas según el orden estándar del mahjong,
+%! ordenarFichas(+Fichas, -FichasOrdenadas) is det.
+%* Ordena una lista de fichas según el orden estándar del mahjong,
 %* conservando fichas repetidas.
-ordenarMano(Mano, ManoOrdenada) :-
-    length(Mano, N),
+ordenarFichas(Fichas, FichasOrdenadas) :-
+    length(Fichas, N),
     numlist(1, N, Indices),
-    pairs_keys_values(Pares, Mano, Indices),
+    pairs_keys_values(Pares, Fichas, Indices),
     predsort(compararFichas, Pares, ParesOrdenados),
-    pairs_keys(ParesOrdenados, ManoOrdenada).
+    pairs_keys(ParesOrdenados, FichasOrdenadas).
+
+%! fichasEnOrden(+Fichas) is nondet.
+%* Auxiliar para corroborar si una lista de fichas ya está ordenada.
+fichasEnOrden(Fichas) :- ordenarFichas(Fichas, Fichas).

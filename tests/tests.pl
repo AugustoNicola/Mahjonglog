@@ -119,15 +119,38 @@ test(combinacion_conserva_repetidos, all(Elegidos == [[m1,m1], [m1,m2], [m1,m2]]
 
 :- begin_tests(orden).
 
-test(orden_por_palo) :- ordenarMano([s1, m1, p1], [m1, p1, s1]).
-test(orden_por_numero) :- ordenarMano([m3, m1, m2], [m1, m2, m3]).
-test(orden_honores) :- ordenarMano([r, e, n, w, s, g, wh], [e, s, w, n, wh, g, r]).
-test(orden_redfive_despues_de_normal) :- ordenarMano([s5, s5R, s5], [s5, s5, s5R]).
-test(orden_conserva_repetidos) :- ordenarMano([m2, m1, m2, m1], [m1, m1, m2, m2]).
+test(orden_por_palo) :- ordenarFichas([s1, m1, p1], [m1, p1, s1]).
+test(orden_por_numero) :- ordenarFichas([m3, m1, m2], [m1, m2, m3]).
+test(orden_honores) :- ordenarFichas([r, e, n, w, s, g, wh], [e, s, w, n, wh, g, r]).
+test(orden_redfive_despues_de_normal) :- ordenarFichas([s5, s5R, s5], [s5, s5, s5R]).
+test(orden_conserva_repetidos) :- ordenarFichas([m2, m1, m2, m1], [m1, m1, m2, m2]).
 test(orden_mano_mixta) :-
-    ordenarMano([s5, p1, s5R, s5, s1, n], [p1, s1, s5, s5, s5R, n]).
+    ordenarFichas([s5, p1, s5R, s5, s1, n], [p1, s1, s5, s5, s5R, n]).
+
+test(fichas_en_orden_verdadero) :- fichasEnOrden([m1, m2, m3]).
+test(fichas_en_orden_falso) :- \+ fichasEnOrden([m2, m1, m3]).
 
 :- end_tests(orden).
+
+% ===================== llamadas =====================
+
+:- begin_tests(llamadas).
+
+test(llamada_chii_valida) :- llamada(chii(m1, m2, m3)).
+test(llamada_chii_falla_desordenada) :- \+ llamada(chii(m2, m1, m3)).
+test(llamada_chii_falla_sin_escalera) :- \+ llamada(chii(m1, m2, m4)).
+
+test(llamada_pon_valida) :- llamada(pon(n, n, n)).
+test(llamada_pon_es_unica) :-
+    findall(x, llamada(pon(n, n, n)), Rs),
+    length(Rs, 1).
+test(llamada_pon_falla_sin_tripla) :- \+ llamada(pon(m1, m1, m2)).
+
+test(llamada_kan_cerrado_valido) :- llamada(kanCerrado(m1, m1, m1, m1)).
+test(llamada_kan_abierto_valido) :- llamada(kanAbierto(m1, m1, m1, m1)).
+test(llamada_kan_falla_sin_cuarta_igual) :- \+ llamada(kanCerrado(m1, m1, m1, m2)).
+
+:- end_tests(llamadas).
 
 % ===================== forma de mano ganadora =====================
 
@@ -151,25 +174,39 @@ test(seleccionar_juego_unico) :-
     findall(R, seleccionarJuego([m1, m1, m1], R), Rs),
     length(Rs, 1).
 
-test(compuesta_por_cero_juegos_vacia) :- once(compuestaPorJuegos([], 0)).
-test(compuesta_por_un_juego) :- once(compuestaPorJuegos([m1, m1, m1], 1)).
-test(compuesta_por_dos_juegos) :- once(compuestaPorJuegos([m1, m1, m1, p2, p3, p4], 2)).
-test(compuesta_por_juegos_falla_con_sobrantes) :- \+ compuestaPorJuegos([m1, m1, m1, m9], 1).
+test(compuesta_por_cero_juegos_vacia) :- once(compuestaPorJuegos(mano([], []), 0)).
+test(compuesta_por_un_juego_suelto) :- once(compuestaPorJuegos(mano([m1, m1, m1], []), 1)).
+test(compuesta_por_dos_juegos_sueltos) :- once(compuestaPorJuegos(mano([m1, m1, m1, p2, p3, p4], []), 2)).
+test(compuesta_por_juegos_falla_con_sobrantes) :- \+ compuestaPorJuegos(mano([m1, m1, m1, m9], []), 1).
+
+test(compuesta_por_juegos_cuenta_llamadas) :-
+    once(compuestaPorJuegos(mano([m1, m1, m1], [pon(n, n, n)]), 2)).
+test(compuesta_por_juegos_falla_llamada_invalida) :-
+    \+ compuestaPorJuegos(mano([m1, m1, m1], [pon(m1, m1, m2)]), 2).
+
+% ---- manoGanadora: hands are mano(FichasSueltas, Llamadas) ----
 
 test(mano_ganadora_triplas) :-
-    once(manoGanadora([m1, m1, m1, p2, p3, p4, s5, s5, s5, s6, s7, s8, n, n])).
+    once(manoGanadora(mano([m1, m1, m1, p2, p3, p4, s5, s5, s5, s6, s7, s8, n, n], []))).
 
 test(mano_ganadora_desordenada) :-
-    once(manoGanadora([n, n, s8, s7, s6, s5, s5, s5, p4, p3, p2, m1, m1, m1])).
+    once(manoGanadora(mano([n, n, s8, s7, s6, s5, s5, s5, p4, p3, p2, m1, m1, m1], []))).
 
 test(mano_ganadora_falla_mano_incompleta) :-
-    \+ manoGanadora([m1, m1, m1, p2, p3, p4, s5, s5, s5, s6, s7, s8, n]).
+    \+ manoGanadora(mano([m1, m1, m1, p2, p3, p4, s5, s5, s5, s6, s7, s8, n], [])).
 
 test(mano_ganadora_falla_sin_par) :-
-    \+ manoGanadora([m1, m2, m3, p2, p3, p4, s5, s6, s7, s6, s7, s8, m4, m5]).
+    \+ manoGanadora(mano([m1, m2, m3, p2, p3, p4, s5, s6, s7, s6, s7, s8, m4, m5], [])).
 
 test(mano_ganadora_es_unica) :-
-    findall(x, manoGanadora([m1, m1, m1, p2, p3, p4, s5, s5, s5, s6, s7, s8, n, n]), Rs),
+    findall(x, manoGanadora(mano([m1, m1, m1, p2, p3, p4, s5, s5, s5, s6, s7, s8, n, n], [])), Rs),
     length(Rs, 1).
+
+test(mano_ganadora_con_llamadas) :-
+    % El par nunca viene de las llamadas: n,n queda en FichasSueltas.
+    once(manoGanadora(mano([p2, p3, p4, s5, s5, s5, n, n], [pon(m1, m1, m1), chii(s6, s7, s8)]))).
+
+test(mano_ganadora_falla_si_par_viene_de_llamada) :-
+    \+ manoGanadora(mano([m3, m4, m5, s5, s5, s5, s6, s7, s8], [pon(n, n, n), pon(m1, m1, m1)])).
 
 :- end_tests(forma_mano_ganadora).
