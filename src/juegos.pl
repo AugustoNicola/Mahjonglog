@@ -1,23 +1,18 @@
 :- ensure_loaded(fichas).
 
-%! juego(F1, F2, F3) is nondet.
-%* Relaciona tres fichas que forman algún tipo de juego (tripla o escalera).
-juego(F1, F2, F3) :- tripla(F1, F2, F3).
-juego(F1, F2, F3) :- escalera(F1, F2, F3).
-
 %* ===================== Juegos de Pares y Triplas =====================
-%! par(?F1, ?F2) is nondet.
-%* Relaciona dos fichas iguales, igual que ===/2.
-par(F1, F2) :- F1 === F2.
+%! fichasDePareja(?F1, ?F2) is nondet.
+%* Relaciona dos fichas que conforman un par, es decir iguales según ===/2.
+fichasDePareja(F1, F2) :- F1 === F2.
 
-%! tripla(?F1, ?F2, ?F3) is nondet.
-%* Relaciona tres fichas iguales, igual que ===/2.
-tripla(F1, F2, F3) :- F1 === F2, F2 === F3.
+%! fichasDeTripla(?F1, ?F2, ?F3) is nondet.
+%* Relaciona tres fichas que conforman una tripla, es decir iguales según ===/2.
+fichasDeTripla(F1, F2, F3) :- F1 === F2, F2 === F3.
 
 %* ===================== Juegos de Escaleras =====================
-%! escalera(?F1, ?F2, ?F3) is nondet.
-%* Relaciona tres fichas que forman una escalera, sin importar el orden relativo.
-escalera(F1, F2, F3) :- mismoPalo(F1, F2, F3), numerosEnEscalera(F1, F2, F3).
+%! fichasDeEscalera(?F1, ?F2, ?F3) is nondet.
+%* Relaciona tres fichas que conforman una escalera, sin importar el orden relativo.
+fichasDeEscalera(F1, F2, F3) :- mismoPalo(F1, F2, F3), numerosEnEscalera(F1, F2, F3).
 
 %! mismoPalo(?F1, ?F2, ?F3) is nondet.
 %* Relaciona tres fichas del mismo palo.
@@ -47,10 +42,6 @@ max3(X, Y, Z, Max) :-
 %! min3(+X, +Y, +Z, ?Min)
 min3(X, Y, Z, Min) :-
     Min is min(X, min(Y, Z)).
-
-%par(F, F) :- ficha(F), not(redfive(F)).
-%par(F, F) :- ficha(F),  redfive(F)
-%tripla(F, F, F) :- ficha(F).
 
 %* ===================== Combinaciones =====================
 %! combinacion(+N, +Lista, -Elegidos, -Resto) is nondet.
