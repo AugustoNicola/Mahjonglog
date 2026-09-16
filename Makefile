@@ -40,12 +40,14 @@ docs:
 
 check:
 	@echo "Checking syntax of all .pl files..."
-	@for f in $(SRC_DIR)/*.pl $(TEST_DIR)/*.pl; do \
+	@for f in $(SRC_DIR)/*.pl; do \
 		if [ -f "$$f" ]; then \
 			echo "  Checking $$f..."; \
 			$(SWIPL) -g "consult('$$f'), halt" -t 'halt(1)' 2>&1 | grep -i error && exit 1 || true; \
 		fi; \
 	done
+	@echo "  Checking $(TEST_DIR)/tests.pl (carga todos los tests)..."
+	@$(SWIPL) -g "consult('$(TEST_DIR)/tests'), halt" -t 'halt(1)' 2>&1 | grep -i error && exit 1 || true
 	@echo "✓ All syntax checks passed"
 
 debug:

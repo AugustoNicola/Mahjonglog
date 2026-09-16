@@ -21,7 +21,7 @@ normal(F) :- palo(F, man).
 terminal(F) :- numero(F, 1).
 terminal(F) :- numero(F, 9).
 
-noterminal(F) :- numero(F, N), between(2,8,N).
+simple(F) :- numero(F, N), between(2,8,N).
 
 ficha(F) :- palo(F, _).
 

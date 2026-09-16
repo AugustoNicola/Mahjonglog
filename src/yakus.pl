@@ -4,19 +4,24 @@
 :- ensure_loaded(situacion).
 
 %* ===================== Yakus =====================
-%* Cada yaku sigue la firma <nombreYaku>(+Victoria, +Situacion) is semidet,
-%* e indica si ese yaku aplica a esa victoria bajo esa situación.
+%! yaku(+Yaku, +Victoria, +Situacion) is semidet.
+%* Relaciona yakus que aplican a esta victoria bajo esta situación.
 %* victoria/3 y situacion/3 se documentan en victoria.pl y situacion.pl.
 
-%! tanyao(+Victoria, +Situacion) is semidet.
-%* Aplica si ninguna ficha de la mano (sueltas o en llamadas) es terminal
-%* ni honor, es decir, todas las fichas son noterminal/1.
-%* (normal/1 no alcanza: sólo excluye honores, no terminales como m1/m9).
-tanyao(victoria(Mano, _, _), _) :-
-    todasLasFichas(Mano, Fichas),
-    \+ (member(F, Fichas), \+ noterminal(F)).
 
-%! ippatsu(+Victoria, +Situacion) is semidet.
-%* Aplica si la Situacion tiene el flag ippatsu. No depende de la mano
-%* ni de la ficha ganadora.
-ippatsu(_, Situacion) :- tieneFlag(Situacion, ippatsu).
+%* ===================== Tanyao =====================
+yaku(tanyao, Victoria, Situacion) :- 
+    victoriaValida(Victoria),
+    situacionValida(Situacion),
+    Victoria = victoria(Formas, _, _),
+    todasLasFichas(Formas, Fichas),
+    \+ (member(F, Fichas), \+ simple(F)).
+
+
+
+%* ===================== Menzen Tsumo =====================
+yaku(menzenTsumo, Victoria, Situacion) :- 
+    victoriaValida(Victoria),
+    situacionValida(Situacion),
+    Victoria = victoria(Formas, _, tsumo),
+    \+ (member(Forma, Formas), llamada(Forma)).

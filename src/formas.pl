@@ -1,4 +1,5 @@
 :- ensure_loaded(juegos).
+:- ensure_loaded(orden).
 
 :- discontiguous llamada/1.
 :- discontiguous oculta/1.

@@ -15,6 +15,17 @@ manoGanadora(mano(FichasSueltas, Llamadas), FormasGanadoras) :-
     compuestaPorJuegos(mano(RestoFichasSueltas, Llamadas), 4, Juegos),
     FormasGanadoras = [Par | Juegos].
 
+%! todasLasFichas(+FormasGanadoras, -Fichas) is det.
+%* Relaciona FormasGanadoras con la lista de todas sus fichas.
+todasLasFichas(FormasGanadoras, Fichas) :-
+    maplist(fichasDeForma, FormasGanadoras, FichasPorForma),
+    append(FichasPorForma, Fichas).
+
+%! fichasDeForma(+Forma, -Fichas) is det.
+%* Relaciona una Forma (pareja, chii, pon, escC, triC, kanA o kanC) con
+%* la lista de fichas que la componen.
+fichasDeForma(Forma, Fichas) :- Forma =.. [_ | Fichas].
+
 %! seleccionarPar(?Fichas, ?RestoFichas, ?Par) is nondet.
 %* Relaciona una lista ordenada de fichas con RestoFichas y Par tales que
 %* RestoFichas más Par conforman Fichas. Como Fichas está ordenada, las
