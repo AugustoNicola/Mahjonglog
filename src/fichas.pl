@@ -14,6 +14,8 @@ numero(p1, 1). numero(p2, 2). numero(p3, 3). numero(p4, 4). numero(p5, 5). numer
 viento(n). viento(s). viento(e). viento(w).
 dragon(r). dragon(g). dragon(wh).
 
+vientoCorrespondiente(n, norte). vientoCorrespondiente(s, sur). vientoCorrespondiente(e, este). vientoCorrespondiente(o, oeste).
+
 normal(F) :- palo(F, sou).
 normal(F) :- palo(F, pin).
 normal(F) :- palo(F, man).
