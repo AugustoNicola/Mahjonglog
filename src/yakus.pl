@@ -45,12 +45,12 @@ yaku(sanshokuDoujun, victoria(Formas, _, _), _) :-
 %* ===================== Ittsuu (Pure Straight) =====================
 yaku(ittsuu, victoria(Formas, _, _), _) :- 
     % probamos todos los palos donde podríamos tener un ittsuu. 
-    member(palo, [man,pin,sou]),
+    member(Palo, [man,pin,sou]),
 
     % buscamos a ver si tenemos las tres escaleras en este palo:
-    escaleraDeNumerosYPalo(Formas, [1,2,3], palo),
-    escaleraDeNumerosYPalo(Formas, [4,5,6], palo),
-    escaleraDeNumerosYPalo(Formas, [7,8,9], palo).
+    escaleraDeNumerosYPalo(Formas, [1,2,3], Palo),
+    escaleraDeNumerosYPalo(Formas, [4,5,6], Palo),
+    escaleraDeNumerosYPalo(Formas, [7,8,9], Palo).
 
 %* ===================== Tanyao (All Simples) =====================
 yaku(tanyao, victoria(Formas, _, _), _) :- 
@@ -89,6 +89,107 @@ yaku(haku, victoria(Formas, _, _), _) :-
 yaku(menzenTsumo, victoria(Formas, _, tsumo), _) :- 
     manoCerrada(Formas).
 
+%* ===================== Shousangen (Little Three Dragons) =====================
+yaku(shousangen, victoria(Formas, _, _), _) :- 
+    % tenemos un par de dragones:
+    select(ParDragon, Formas, FormasSin1),
+    par(ParDragon),
+    ParDragon =.. [_, FichaParDragon | _],
+    dragon(FichaParDragon),
+    % tenemos una pierna (tripla/quad) de dragones:
+    select(PiernaDragonA, FormasSin1, FormasSin2),
+    pierna(PiernaDragonA),
+    PiernaDragonA =.. [_, FichaPiernaDragonA | _],
+    dragon(FichaPiernaDragonA),
+    % tenemos otra pierna (tripla/quad) de dragones:
+    member(PiernaDragonB, FormasSin2),
+    pierna(PiernaDragonB),
+    PiernaDragonB =.. [_, FichaPiernaDragonB | _],
+    dragon(FichaPiernaDragonB).
+
+%* ===================== Daisangen (Big Three Dragons) =====================
+yaku(daisangen, victoria(Formas, _, _), _) :- 
+    % tenemos una primera pierna (tripla/quad) de dragones:
+    select(PiernaDragonA, Formas, FormasSin1),
+    pierna(PiernaDragonA),
+    PiernaDragonA =.. [_, FichaPiernaDragonA | _],
+    dragon(FichaPiernaDragonA),
+    % tenemos una segunda pierna (tripla/quad) de dragones:
+    select(PiernaDragonB, FormasSin1, FormasSin2),
+    pierna(PiernaDragonB),
+    PiernaDragonB =.. [_, FichaPiernaDragonB | _],
+    dragon(FichaPiernaDragonB),
+    % tenemos una tercera pierna (tripla/quad) de dragones:
+    member(PiernaDragonC, FormasSin2),
+    pierna(PiernaDragonC),
+    PiernaDragonC =.. [_, FichaPiernaDragonC | _],
+    dragon(FichaPiernaDragonC).
+
+%* ===================== Shousuushii (Little Four Winds) =====================
+yaku(shousuushii, victoria(Formas, _, _), _) :- 
+    % tenemos un par de viento:
+    select(ParViento, Formas, FormasSin1),
+    par(ParViento),
+    ParViento =.. [_, FichaParViento | _],
+    viento(FichaParViento),
+    % tenemos una primera pierna (tripla/quad) de viento:
+    select(PiernaVientoA, FormasSin1, FormasSin2),
+    pierna(PiernaVientoA),
+    PiernaVientoA =.. [_, FichaPiernaVientoA | _],
+    viento(FichaPiernaVientoA),
+    % tenemos una segunda pierna (tripla/quad) de viento:
+    select(PiernaVientoB, FormasSin2, FormasSin3),
+    pierna(PiernaVientoB),
+    PiernaVientoB =.. [_, FichaPiernaVientoB | _],
+    viento(FichaPiernaVientoB),
+    % tenemos una tercera pierna (tripla/quad) de viento:
+    member(PiernaVientoC, FormasSin3),
+    pierna(PiernaVientoC),
+    PiernaVientoC =.. [_, FichaPiernaVientoC | _],
+    viento(FichaPiernaVientoC).
+
+%* ===================== Daisuushii (Big Four Winds) =====================
+yaku(daisuushii, victoria(Formas, _, _), _) :- 
+    % tenemos una primera pierna (tripla/quad) de viento:
+    select(PiernaVientoA, Formas, FormasSin1),
+    pierna(PiernaVientoA),
+    PiernaVientoA =.. [_, FichaPiernaVientoA | _],
+    viento(FichaPiernaVientoA),
+    % tenemos una segunda pierna (tripla/quad) de viento:
+    select(PiernaVientoB, FormasSin1, FormasSin2),
+    pierna(PiernaVientoB),
+    PiernaVientoB =.. [_, FichaPiernaVientoB | _],
+    viento(FichaPiernaVientoB),
+    % tenemos una tercera pierna (tripla/quad) de viento:
+    select(PiernaVientoC, FormasSin2, FormasSin3),
+    pierna(PiernaVientoC),
+    PiernaVientoC =.. [_, FichaPiernaVientoC | _],
+    viento(FichaPiernaVientoC),
+    % tenemos una cuarta pierna (tripla/quad) de viento:
+    member(PiernaVientoD, FormasSin3),
+    pierna(PiernaVientoD),
+    PiernaVientoD =.. [_, FichaPiernaVientoD | _],
+    viento(FichaPiernaVientoD).
+
+%* ===================== Chanta (Terminals & Honors Everywhere) =====================
+yaku(chanta, victoria(Formas, _, _), _) :- 
+    maplist(algunaFichaCumple(noSimple), Formas).
+
+%* ===================== Junchan (Terminals Everywhere) =====================
+yaku(junchan, victoria(Formas, _, _), _) :- 
+    maplist(algunaFichaCumple(terminal), Formas).
+
+%* ===================== Honroutou (All Terminals & Honors) =====================
+yaku(honroutou, victoria(Formas, _, _), _) :- 
+    maplist(todaFichaCumple(noSimple), Formas).
+
+%* ===================== Chinroutou (All Terminals) =====================
+yaku(chinroutou, victoria(Formas, _, _), _) :- 
+    maplist(todaFichaCumple(terminal), Formas).
+
+%* ===================== Tsuuiisou (All Honors) =====================
+yaku(tsuuiisou, victoria(Formas, _, _), _) :- 
+    maplist(todaFichaCumple(honor), Formas).
 
 %* ===================== Auxiliares =====================
 %! manoCerrada(+Formas) is semidet.
@@ -108,3 +209,21 @@ escaleraDeNumerosYPalo(Formas, Numeros, Palo) :-
     maplist(numero, FichasEscalera, Numeros), % va en el rango numérico indicado
     FichasEscalera = [FichaEscalera|_],
     palo(FichaEscalera, Palo). % es del palo indicado
+
+%! algunaFichaCumple(+Predicado, +Forma) is nondet.
+%* Predicado de alto orden que relaciona formas que tengan al menos una ficha
+%* que cumpla el predicado.
+algunaFichaCumple(PredicadoSobreFicha, Forma) :-
+    forma(Forma),
+    Forma =.. [_ | Fichas],
+    member(Ficha, Fichas),
+    call(PredicadoSobreFicha, Ficha),
+    !.
+
+%! todaFichaCumple(+Predicado, +Forma) is nondet.
+%* Predicado de alto orden que relaciona formas cuyas fichas
+%* cumplan todas el predicado,
+todaFichaCumple(PredicadoSobreFicha, Forma) :-
+    forma(Forma),
+    Forma =.. [_ | Fichas],
+    maplist(PredicadoSobreFicha, Fichas).

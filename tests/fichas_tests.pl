@@ -24,6 +24,11 @@ test(numero_redfive_conserva_numero) :- numero(m5R, 5).
 test(ficha_normal_es_ficha) :- ficha(m1).
 test(ficha_honor_es_ficha) :- ficha(r).
 
+test(viento_correspondiente_norte) :- vientoCorrespondiente(n, norte).
+test(viento_correspondiente_sur) :- vientoCorrespondiente(s, sur).
+test(viento_correspondiente_este) :- vientoCorrespondiente(e, este).
+test(viento_correspondiente_oeste) :- vientoCorrespondiente(w, oeste).
+
 :- end_tests(fichas).
 
 % ===================== normal / terminal / simple =====================

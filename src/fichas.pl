@@ -13,8 +13,9 @@ numero(p1, 1). numero(p2, 2). numero(p3, 3). numero(p4, 4). numero(p5, 5). numer
 
 viento(n). viento(s). viento(e). viento(w).
 dragon(r). dragon(g). dragon(wh).
+honor(F) :- palo(F, honor).
 
-vientoCorrespondiente(n, norte). vientoCorrespondiente(s, sur). vientoCorrespondiente(e, este). vientoCorrespondiente(o, oeste).
+vientoCorrespondiente(n, norte). vientoCorrespondiente(s, sur). vientoCorrespondiente(e, este). vientoCorrespondiente(w, oeste).
 
 normal(F) :- palo(F, sou).
 normal(F) :- palo(F, pin).
@@ -24,6 +25,7 @@ terminal(F) :- numero(F, 1).
 terminal(F) :- numero(F, 9).
 
 simple(F) :- numero(F, N), between(2,8,N).
+noSimple(F) :- \+ simple(F).
 
 ficha(F) :- palo(F, _).
 
